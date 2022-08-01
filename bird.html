@@ -20,13 +20,18 @@
       let score = 0;
       let speed = 1;
 
+
       class Pipe {
         x;
         y;
         constructor() {
           this.x = w;
+          this.randomY()
+        }
+        randomY (){
           this.y = Math.floor(Math.random() * (0 - -200 + 1)) + -200;
         }
+
       }
       pipe = [];
       pipe[0] = new Pipe();
@@ -59,24 +64,14 @@
           pipe[i].x -= speed;
           if (pipe[i].x == 0 - up.width) {
             pipe[i].x = w;
-            pipe[i].y = Math.floor(Math.random() * (0 - -200 + 1)) + -200;//ДУБЛИРУЕТСЯ
+            pipe[i].randomY();
             
           }
 
-          if (x + bird.width >= pipe[i].x && x <= pipe[i].x + bottom.width) {
-            if (//2 ИФА
-              y > pipe[i].y + up.height &&
-              y + bird.height < pipe[i].y + up.height + 90
-            ) {
-              console.log("%cУдачно", "color:green"); // что делает этот иФ?
-            } else {
-              console.log("%cВрезался", "color:red");
+          if (x + bird.width >= pipe[i].x && x <= pipe[i].x + bottom.width && 
+          !(y > pipe[i].y + up.height && y + bird.height < pipe[i].y + up.height + 90)) {
               isAlive = false;
-              ctx.fillText("Конец игры", 20, 120);//1
-            }
-          } else {
-            console.log("%cУдачно", "color:green");
-          }
+          } 
           if (x + bird.width == pipe[i].x + bottom.width) {
             score = score + 1;
           }
@@ -84,19 +79,21 @@
         }
 
         ctx.drawImage(fg, 0, canvas.height - fg.height);
-        ctx.drawImage(bird, x, y++);
+        ctx.drawImage(bird, x, y+=2);
         if (y + bird.height == canvas.height - fg.height || y < 0) {
-          ctx.fillText("Конец игры", 20, 120);//1
           isAlive = false;
         }
 
         if (isAlive) {
           requestAnimationFrame(draw);
         }
+        else {
+          ctx.fillText("Конец игры", 20, 120);
+        }
       }
 
       canvas.addEventListener("mousedown", function (e) {
-        y = y - 20;
+        y = y - 30;
       });
 
       up.onload = draw;
